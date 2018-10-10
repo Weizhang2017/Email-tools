@@ -1,7 +1,7 @@
 import re
 import logging
 
-logging.basicConfig(filename='error.log', level=logging.ERROR) #filename='/var/mail/vhosts/{{ domain }}/marketing/bounce.log'
+logging.basicConfig(filename='error.log', level=logging.ERROR) 
 
 class Bounce_classifier(object):
 	'''Classify bounce messages using regex'''
