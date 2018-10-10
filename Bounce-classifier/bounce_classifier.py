@@ -1,6 +1,5 @@
 import re
 import logging
-import glob
 
 logging.basicConfig(filename='error.log', level=logging.ERROR) #filename='/var/mail/vhosts/{{ domain }}/marketing/bounce.log'
 
