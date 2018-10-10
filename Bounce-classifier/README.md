@@ -2,7 +2,7 @@
 
 ### Sample usage:
 
-```
+```python
 with open('sample.txt','r') as f:
 	email_text = f.read()
 bc = Bounce_classifier(email_text)
