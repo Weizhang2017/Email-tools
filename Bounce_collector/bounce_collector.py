@@ -44,30 +44,3 @@ class Message:
 		bc = Bounce_classifier(self.message)
 		catalogue, key_word = bc.no_diagonostic_code()
 		return catalogue, key_word
-'''
-class Bounce(Document):
-
-	message = StringField(required=True)
-	catalogue = StringField(required=True)
-	key_word = StringField()
-	date_modified = DateTimeField(default=datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=8))))
-	meta = {'collection': 'bounce_messages'}
-
-class OperationBounceDB:
-	def __init__(self):
-		con = connect('bounce')
-
-	def store_message(self, message):
-		bc = Bounce_classifier(message)
-		catalogue, key_word = bc.no_diagonostic_code()
-		Bounce(message=message, catalogue=catalogue, key_word=key_word).save()
-
-class Main:
-	@staticmethod
-	def collect_bounce():
-		es = EmailServer('128.199.82.10','marketing@largesell.xyz','123welcome123')
-		for message in es.retrieve_bounce_smtp('inbox'):
-			odb = OperationBounceDB()
-			odb.store_message(message)
-			print(message)
-'''
