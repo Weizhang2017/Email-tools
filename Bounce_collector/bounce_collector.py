@@ -1,5 +1,5 @@
 from SMTPEmail import IMAP
-from Bounce_classifier.bounce_classifier import Bounce_classifier
+from ..Bounce_classifier.bounce_classifier import Bounce_classifier
 from mongoengine import *
 import datetime
 import requests

@@ -134,7 +134,7 @@ class Bounce_classifier(object):
 		elif re.search('in\smy\scontrol.*locals', self.email_text):
 		  classification = "invalid"
 		  key_word = ''
-		elif re.search('invalid.*mailbox', self.email_text):
+		elif re.search('invalid.*(mailbox|recipient)', self.email_text):
 		  classification = "invalid"
 		  key_word = 'invalid'
 		elif re.search('user\sunknown|unknown\suser', self.email_text):
@@ -143,6 +143,12 @@ class Bounce_classifier(object):
 		elif re.search('not found', self.email_text):
 		  classification = "invalid"
 		  key_word = 'not found'
+		elif re.search('account.*disabled', self.email_text):
+		  classification = 'invalid'
+		  key_word = 'account,disabled'
+		elif re.search('address rejected', self.email_text):
+		  classification = 'invalid'
+		  key_word = 'address rejected'
 		# elif re.search('message.*not\sbe\sdelivered', self.email_text):
 		#   classification = "deadrcpt"
 		#   key_word = 'not delivered'
@@ -158,6 +164,18 @@ class Bounce_classifier(object):
 		elif re.search('delivery\sto.*(failed|aborted\safter)', self.email_text):
 		  classification = "invalid"
 		  key_word = 'failed'
+		elif re.search('mailbox unavailable', self.email_text):
+		  classification = 'invalid'
+		  key_word = 'mailbox unavailable'
+		elif re.search('recipient.*unknown', self.email_text):
+		  classification = 'invalid'
+		  key_word = 'recipient unknown'
+		elif re.search('not exist', self.email_text):
+		  classification = 'invalid'
+		  key_word = 'not exist'
+		elif re.search('address.*(invalid|incorrect)', self.email_text):
+		  classification = 'invalid'
+		  key_word = 'address invalid|incorrect'
 
 		# BEGIN: full mailbox
 		elif re.search('(size|(in|mail)box).*(full|size|exceed|many\smessages|much\sdata)', self.email_text):
@@ -183,6 +201,9 @@ class Bounce_classifier(object):
 		elif re.search('reputation', self.email_text):
 		  classification = "blocked"
 		  key_word = 'reputation'
+		elif re.search('not (accept|permit|available)', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'not (permitted|accept|available)'
 		# BEGIN: temporary error
 		elif re.search('open\smailbox\sfor\s.*\stemporary\serror', self.email_text):
 		  classification = "tmperr"
@@ -190,6 +211,21 @@ class Bounce_classifier(object):
 		elif re.search('subject.*mail\ssystem\serror', self.email_text):
 		  classification = "tmperr"
 		  key_word = 'system error'
+		elif re.search('message filtered', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'message filtered'
+		elif re.search('administrative.*prohibition', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'administrative prohibition'
+		elif re.search('550.*IP.*rejected', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'IP rejected'
+		elif re.search('un-solicited|unsolicited', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'unsolicited'
+		elif re.search('security policies', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'security policies'
 
 		# BEGIN: unclassified catchall
 		else:
