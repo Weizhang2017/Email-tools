@@ -74,7 +74,7 @@ class Bounce_classifier(object):
 						not\saccept.*mail|\
 						message.*re(fused|ject)|\
 						transaction\sfailed.*psmtp|\
-						sorbs|rbl|spam|spamcop|block|den(y|ied)|\
+						sorbs|rbl|spam|spamcop|block|blocked|den(y|ied)|\
 						unsolicited|\
 						not\sauthorized\sfrom\sthis\sip|\
 						reject\smail\sfrom|try\sagain\slater)|\
@@ -140,7 +140,7 @@ class Bounce_classifier(object):
 		elif re.search('user\sunknown|unknown\suser', self.email_text):
 		  classification = "invalid"
 		  key_word = 'unknown'
-		elif re.search('not found', self.email_text):
+		elif re.search('(not found|couldn\'t be found)', self.email_text):
 		  classification = "invalid"
 		  key_word = 'not found'
 		elif re.search('account.*disabled', self.email_text):
@@ -226,6 +226,27 @@ class Bounce_classifier(object):
 		elif re.search('security policies', self.email_text):
 		  classification = 'blocked'
 		  key_word = 'security policies'
+		elif re.search('complain', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'complain'
+		elif re.search('blocked', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'blocked'
+		elif re.search('lost connection', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'lost connection'
+		elif re.search('connection timed out', self.email_text):
+		  classification = 'invalid mx'
+		  key_word = 'connection timed out'
+		elif re.search('(qq write error|disk full)', self.email_text):
+		  classification = 'mx error'
+		  key_word = 'qq write error or disk full'
+		elif re.search('prior approval', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'prior approval'
+		elif re.search('try again later', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'try again later'
 
 		# BEGIN: unclassified catchall
 		else:
