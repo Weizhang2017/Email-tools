@@ -96,72 +96,72 @@ class Bounce_classifier(object):
 
 		# BEGIN: message autoreply 
 
-		if re.search('X-Autoreply:\s*yes', self.email_text):
+		if re.search(r'X-Autoreply:\s*yes', self.email_text):
 			classification = "autoreply"
 			key_word = 'X-Autoreply:\s*yes'
-		elif re.search('Subject:.*(out\s+of.*office|auto.*re(ply|spon))', self.email_text):
+		elif re.search(r'Subject:.*(out\s+of.*office|auto.*re(ply|spon))', self.email_text):
 			classification = "autoreply"
 			key_word = 'out of office'
-		elif re.search('\s\(aol;\saway\)', self.email_text):
+		elif re.search(r'\s\(aol;\saway\)', self.email_text):
 			classification = "autoreply"
 			key_word = 'away'
-		elif re.search('Dear', self.email_text):
+		elif re.search(r'dear|thank\s+you', self.email_text):
 			classification = "autoreply"
-			key_word = 'Dear'
+			key_word = 'Dear|thank you'
 		# elif re.search('auto-submitted:\s*auto-replied', self.email_text):
 		# 	classification = "autoreply"
 		# 	key_word = 'auto-submitted auto-reply'
 		# BEGIN: message delayed notification
-		elif re.search('(Action:\s*delayed|Will-Retry-Until)', self.email_text):
+		elif re.search(r'(Action:\s*delayed|Will-Retry-Until)', self.email_text):
 		  classification = "delayed"
 		  key_word = 'delayed'
-		elif re.search('Subject:.*delayed\smail', self.email_text):
+		elif re.search(r'Subject:.*delayed\smail', self.email_text):
 		  classification = "delayed"
 		  key_word = 'delayed'
-		elif re.search('Subject:.*delivery.*status.*delay', self.email_text):
+		elif re.search(r'Subject:.*delivery.*status.*delay', self.email_text):
 		  classification = "delayed"
 		  key_word = 'delayed'
-		elif re.search('delivery\sto.*has\sbeen\sdelayed', self.email_text):
+		elif re.search(r'delivery\sto.*has\sbeen\sdelayed', self.email_text):
 		  classification = "delayed"
 		  key_word = 'delayed'
 		# BEGIN: dead recipient address
-		elif re.search('this\suser\sdoesn\'t\shave\sa\s.*\saccount', self.email_text):
+		elif re.search(r'this\suser\sdoesn\'t\shave\sa\s.*\saccount', self.email_text):
 		  classification = "invalid"
 		  key_word = 'doesnt have'
-		elif re.search('user.*doesn.*mail.*your.*address', self.email_text):
+		elif re.search(r'user.*doesn.*mail.*your.*address|no\s*user', self.email_text):
 		  classification = "invalid"
 		  key_word = 'user doesn'
-		elif re.search('in\smy\scontrol.*locals', self.email_text):
+		elif re.search(r'in\smy\scontrol.*locals', self.email_text):
 		  classification = "invalid"
 		  key_word = ''
 		elif re.search('invalid.*(mailbox|recipient)', self.email_text):
 		  classification = "invalid"
 		  key_word = 'invalid'
-		elif re.search('user\sunknown|unknown\suser', self.email_text):
+		elif re.search(r'user\sunknown|unknown\suser|unknown.*recipient', self.email_text):
 		  classification = "invalid"
 		  key_word = 'unknown'
 		elif re.search('(not found|couldn\'t be found)', self.email_text):
 		  classification = "invalid"
 		  key_word = 'not found'
-		elif re.search('account.*disabled', self.email_text):
+		elif re.search(r'(account.*disabled|mailbox.*disabled|no\s*mailbox)', self.email_text):
 		  classification = 'invalid'
-		  key_word = 'account,disabled'
-		elif re.search('address rejected', self.email_text):
+		  key_word = 'account,disabled|no mailbox'
+		elif re.search('(address rejected|recipient rejected)', self.email_text):
 		  classification = 'invalid'
-		  key_word = 'address rejected'
+		  key_word = 'address rejected or recipient rejected'
 		# elif re.search('message.*not\sbe\sdelivered', self.email_text):
 		#   classification = "deadrcpt"
 		#   key_word = 'not delivered'
-		elif re.search('address\swas\snot\sfound', self.email_text):
+		elif re.search(r'address\swas\snot\sfound', self.email_text):
 		  classification = "invalid"
 		  key_word = 'found'
 		elif re.search('protected.*bluebottle', self.email_text):
 		  classification = "invalid"
 		  key_word = 'protected'
-		elif re.search('hop\scount\sexceeded', self.email_text):
+		elif re.search(r'hop\scount\sexceeded', self.email_text):
 		  classification = "invalid"
 		  key_word = 'hop exceed'
-		elif re.search('delivery\sto.*(failed|aborted\safter)', self.email_text):
+		elif re.search(r'delivery\sto.*(failed|aborted\safter)', self.email_text):
 		  classification = "invalid"
 		  key_word = 'failed'
 		elif re.search('mailbox unavailable', self.email_text):
@@ -178,24 +178,24 @@ class Bounce_classifier(object):
 		  key_word = 'address invalid|incorrect'
 
 		# BEGIN: full mailbox
-		elif re.search('(size|(in|mail)box).*(full|size|exceed|many\smessages|much\sdata)', self.email_text):
+		elif re.search(r'(size|(in|mail)box).*(full|exceed|many\smessages|much\sdata)', self.email_text):
 		  classification = "fullbox"
 		  key_word = 'size'
-		elif re.search('quota.*exceed', self.email_text):
+		elif re.search(r'quota.*exceed\w*|over\s*quota', self.email_text):
 		  classification = "fullbox"
 		  key_word = 'exceed'
 
 		# BEGIN: rbl'policy block
-		elif re.search('5\.7\.1.*(reject|spam)', self.email_text):
+		elif re.search(r'(5\.7\.1.*reject|\sspam\s)', self.email_text):
 		  classification = "blocked"
-		  key_word = 'reject'
+		  key_word = 'reject|spam'
 		elif re.search('banned', self.email_text):
 		  classification = "blocked"
 		  key_word = 'banned'
 		elif re.search('protected.*reflexion', self.email_text):
 		  classification = "blocked"
 		  key_word = 'protected'
-		elif re.search('said:\s.*(spam|rbl|blocked|blacklist|abuse)', self.email_text):
+		elif re.search(r'said:\s.*(spam|rbl|blocked|blacklist|abuse)', self.email_text):
 		  classification = "blocked"
 		  key_word = 'blacklist blocked spam'
 		elif re.search('reputation', self.email_text):
@@ -205,10 +205,10 @@ class Bounce_classifier(object):
 		  classification = 'blocked'
 		  key_word = 'not (permitted|accept|available)'
 		# BEGIN: temporary error
-		elif re.search('open\smailbox\sfor\s.*\stemporary\serror', self.email_text):
+		elif re.search(r'open\smailbox\sfor\s.*\stemporary\serror', self.email_text):
 		  classification = "tmperr"
 		  key_word = 'temp error'
-		elif re.search('subject.*mail\ssystem\serror', self.email_text):
+		elif re.search(r'subject.*mail\ssystem\serror', self.email_text):
 		  classification = "tmperr"
 		  key_word = 'system error'
 		elif re.search('message filtered', self.email_text):
@@ -223,7 +223,7 @@ class Bounce_classifier(object):
 		elif re.search('un-solicited|unsolicited', self.email_text):
 		  classification = 'blocked'
 		  key_word = 'unsolicited'
-		elif re.search('security policies', self.email_text):
+		elif re.search(r'security\s*policies', self.email_text):
 		  classification = 'blocked'
 		  key_word = 'security policies'
 		elif re.search('complain', self.email_text):
@@ -232,10 +232,10 @@ class Bounce_classifier(object):
 		elif re.search('blocked', self.email_text):
 		  classification = 'blocked'
 		  key_word = 'blocked'
-		elif re.search('lost connection', self.email_text):
+		elif re.search(r'lost\s*connection', self.email_text):
 		  classification = 'blocked'
 		  key_word = 'lost connection'
-		elif re.search('connection timed out', self.email_text):
+		elif re.search('connection.*timed out', self.email_text):
 		  classification = 'invalid mx'
 		  key_word = 'connection timed out'
 		elif re.search('(qq write error|disk full)', self.email_text):
@@ -247,6 +247,16 @@ class Bounce_classifier(object):
 		elif re.search('try again later', self.email_text):
 		  classification = 'blocked'
 		  key_word = 'try again later'
+		elif re.search('not.*permitted sender', self.email_text):
+		  classification = 'blocked'
+		  key_word = 'not permitted sender'
+		elif re.search('name service error', self.email_text):
+		  classification = 'invalid mx'
+		  key_word = 'name service error'
+		elif re.search('too many hops', self.email_text):
+		  classification = 'invalid'
+		  key_word = 'too many hops'
+
 
 		# BEGIN: unclassified catchall
 		else:
